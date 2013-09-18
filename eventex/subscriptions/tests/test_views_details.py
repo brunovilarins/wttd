@@ -15,7 +15,7 @@ class DetailTest(TestCase):
 
     def test_template(self):
         'Uses Template'
-        self.assertTemplateUsed(self.resp, 'subscriptions/subscription_form.html')
+        self.assertTemplateUsed(self.resp, 'subscriptions/teste.html')
 
     # def test_context(self):
     #     'Context must have a subscription instance.'
