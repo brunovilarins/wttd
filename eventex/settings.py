@@ -1,11 +1,13 @@
 # Django settings for eventex project.
 
+import os
 from unipath import Path
 import dj_database_url
 
 PROJECT_DIR = Path(__file__).parent
 
-DEBUG = True
+
+DEBUG = os.environ.get('DEBUG') == 'True'
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -105,6 +107,7 @@ ROOT_URLCONF = 'eventex.urls'
 WSGI_APPLICATION = 'eventex.wsgi.application'
 
 TEMPLATE_DIRS = (
+
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -122,6 +125,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'eventex.core',
+    'eventex.subscriptions',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -129,12 +133,16 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '.herokuapp.com']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'require_debug_true':{
+            '()': 'django.utils.log.RequireDebugTrue',
         }
     },
     'handlers': {
@@ -142,11 +150,17 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console':{
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
         }
+
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'console'],
             'level': 'ERROR',
             'propagate': True,
         },
